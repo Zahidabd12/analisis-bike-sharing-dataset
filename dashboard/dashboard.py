@@ -3,8 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-day_df = pd.read_csv('day.csv')
-hour_df = pd.read_csv('hour.csv')
+main_data = pd.read_csv('main_data (1).csv')
 
 st.sidebar.title("Bike Sharing Dashboard")
 visual_option = st.sidebar.selectbox(
@@ -13,14 +12,14 @@ visual_option = st.sidebar.selectbox(
         "Histogram Penggunaan",
         "Tren Waktu Harian",
         "Korelasi Heatmap",
-        "Analisis Hari Kerja vs Akhir Pekan",
-        "Tren Waktu per Jam",
     ],
 )
+
+# Visualisasi
 if visual_option == "Histogram Penggunaan":
     st.header("Distribusi Penggunaan Sepeda")
     plt.figure(figsize=(10, 5))
-    plt.hist(day_df['cnt'], bins=30, color='skyblue', edgecolor='black')
+    plt.hist(main_data['cnt'], bins=30, color='skyblue', edgecolor='black')
     plt.xlabel('Jumlah Sepeda')
     plt.ylabel('Frekuensi')
     plt.title('Histogram Jumlah Penggunaan Sepeda')
@@ -28,9 +27,9 @@ if visual_option == "Histogram Penggunaan":
 
 elif visual_option == "Tren Waktu Harian":
     st.header("Tren Waktu Penggunaan Sepeda Harian")
-    day_df['dteday'] = pd.to_datetime(day_df['dteday'])
+    main_data['dteday'] = pd.to_datetime(main_data['dteday'])
     plt.figure(figsize=(12, 6))
-    plt.plot(day_df['dteday'], day_df['cnt'], label='Total Pengguna', color='green')
+    plt.plot(main_data['dteday'], main_data['cnt'], label='Total Pengguna', color='green')
     plt.xlabel('Tanggal')
     plt.ylabel('Jumlah Pengguna')
     plt.title('Tren Penggunaan Sepeda Harian')
@@ -39,30 +38,11 @@ elif visual_option == "Tren Waktu Harian":
 
 elif visual_option == "Korelasi Heatmap":
     st.header("Korelasi Antar Fitur")
-    corr_matrix = day_df[['temp', 'hum', 'windspeed', 'cnt']].corr()
+    corr_matrix = main_data[['temp', 'hum', 'windspeed', 'cnt']].corr()
     plt.figure(figsize=(8, 6))
     sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', fmt='.2f', linewidths=0.5)
     plt.title('Heatmap Korelasi Antar Fitur')
     st.pyplot(plt)
 
-elif visual_option == "Analisis Hari Kerja vs Akhir Pekan":
-    st.header("Perbandingan Hari Kerja dan Akhir Pekan")
-    plt.figure(figsize=(8, 5))
-    sns.barplot(x="workingday", y="cnt", data=day_df, palette="viridis")
-    plt.xticks([0, 1], ['Akhir Pekan', 'Hari Kerja'])
-    plt.xlabel('Hari')
-    plt.ylabel('Jumlah Pengguna')
-    plt.title('Perbandingan Hari Kerja vs Akhir Pekan')
-    st.pyplot(plt)
-
-elif visual_option == "Tren Waktu per Jam":
-    st.header("Tren Waktu Penggunaan Sepeda per Jam")
-    hour_df['dteday'] = pd.to_datetime(hour_df['dteday'])
-    plt.figure(figsize=(12, 6))
-    sns.lineplot(x="hr", y="cnt", data=hour_df, hue="weekday", palette="tab10")
-    plt.xlabel('Jam')
-    plt.ylabel('Jumlah Pengguna')
-    plt.title('Tren Penggunaan Sepeda per Jam')
-    st.pyplot(plt)
-
+# Footer
 st.sidebar.write("© 2025 Bike Sharing Dashboard")
