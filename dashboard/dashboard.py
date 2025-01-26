@@ -8,10 +8,15 @@ hour_df = pd.read_csv('hour.csv')
 
 st.sidebar.title("Bike Sharing Dashboard")
 visual_option = st.sidebar.selectbox(
-    "Pilih Visualisasi", 
-    ["Histogram Penggunaan", "Tren Waktu", "Korelasi Heatmap", "Analisis Hari Kerja vs Akhir Pekan"]
+    "Pilih Visualisasi",
+    [
+        "Histogram Penggunaan",
+        "Tren Waktu Harian",
+        "Korelasi Heatmap",
+        "Analisis Hari Kerja vs Akhir Pekan",
+        "Tren Waktu per Jam",
+    ],
 )
-
 if visual_option == "Histogram Penggunaan":
     st.header("Distribusi Penggunaan Sepeda")
     plt.figure(figsize=(10, 5))
@@ -21,8 +26,8 @@ if visual_option == "Histogram Penggunaan":
     plt.title('Histogram Jumlah Penggunaan Sepeda')
     st.pyplot(plt)
 
-elif visual_option == "Tren Waktu":
-    st.header("Tren Waktu Penggunaan Sepeda")
+elif visual_option == "Tren Waktu Harian":
+    st.header("Tren Waktu Penggunaan Sepeda Harian")
     day_df['dteday'] = pd.to_datetime(day_df['dteday'])
     plt.figure(figsize=(12, 6))
     plt.plot(day_df['dteday'], day_df['cnt'], label='Total Pengguna', color='green')
@@ -37,6 +42,7 @@ elif visual_option == "Korelasi Heatmap":
     corr_matrix = day_df[['temp', 'hum', 'windspeed', 'cnt']].corr()
     plt.figure(figsize=(8, 6))
     sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', fmt='.2f', linewidths=0.5)
+    plt.title('Heatmap Korelasi Antar Fitur')
     st.pyplot(plt)
 
 elif visual_option == "Analisis Hari Kerja vs Akhir Pekan":
@@ -47,6 +53,16 @@ elif visual_option == "Analisis Hari Kerja vs Akhir Pekan":
     plt.xlabel('Hari')
     plt.ylabel('Jumlah Pengguna')
     plt.title('Perbandingan Hari Kerja vs Akhir Pekan')
+    st.pyplot(plt)
+
+elif visual_option == "Tren Waktu per Jam":
+    st.header("Tren Waktu Penggunaan Sepeda per Jam")
+    hour_df['dteday'] = pd.to_datetime(hour_df['dteday'])
+    plt.figure(figsize=(12, 6))
+    sns.lineplot(x="hr", y="cnt", data=hour_df, hue="weekday", palette="tab10")
+    plt.xlabel('Jam')
+    plt.ylabel('Jumlah Pengguna')
+    plt.title('Tren Penggunaan Sepeda per Jam')
     st.pyplot(plt)
 
 st.sidebar.write("© 2025 Bike Sharing Dashboard")
