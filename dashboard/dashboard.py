@@ -15,7 +15,6 @@ visual_option = st.sidebar.selectbox(
     ],
 )
 
-# Visualisasi
 if visual_option == "Histogram Penggunaan":
     st.header("Distribusi Penggunaan Sepeda")
     plt.figure(figsize=(10, 5))
@@ -44,5 +43,4 @@ elif visual_option == "Korelasi Heatmap":
     plt.title('Heatmap Korelasi Antar Fitur')
     st.pyplot(plt)
 
-# Footer
 st.sidebar.write("© 2025 Bike Sharing Dashboard")
